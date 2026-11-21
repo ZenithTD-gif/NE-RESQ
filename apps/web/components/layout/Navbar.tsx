@@ -63,7 +63,7 @@ export function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full liquid-glass-navbar">
+    <header className="sticky top-0 z-50 w-full liquid-glass-navbar shadow-xs">
       {/* Top emergency broadcast notice bar */}
       <div className="bg-gradient-to-r from-emergency via-charcoal to-emergency text-white text-[11px] font-semibold py-1 px-4 text-center tracking-wide flex items-center justify-center gap-2">
         <span className="w-2 h-2 rounded-full bg-white animate-ping" />
@@ -71,11 +71,41 @@ export function Navbar() {
         <span className="hidden md:inline text-white/80">| {t('topbar.helplines', 'SEOC Toll Free: 1070 | National: 112')}</span>
       </div>
 
+      {/* ==================================================================== */}
+      {/* UPPER ROW: ALL EXISTING NAVIGATION TABS AND MENU ITEMS              */}
+      {/* ==================================================================== */}
+      <div className="w-full border-b border-sky-200/50 bg-white/45 backdrop-blur-md">
+        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
+          <nav className="flex items-center justify-center py-1.5 gap-1 sm:gap-1.5 md:gap-2 overflow-x-auto no-scrollbar scroll-smooth">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
+                    isActive
+                      ? 'bg-cyan-50 text-cyan font-bold border border-cyan-200 shadow-xs'
+                      : 'text-charcoal-muted hover:text-charcoal hover:bg-white/80'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+
+      {/* ==================================================================== */}
+      {/* LOWER ROW: LOGO, WEBSITE NAME, ADMIN PORTAL, LOCATION, LANGUAGE,   */}
+      {/* SIGN IN & SOS CONTROLS                                               */}
+      {/* ==================================================================== */}
       <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4 w-full">
+        <div className="flex items-center justify-between h-14 sm:h-16 gap-3 sm:gap-4 w-full">
           
-          {/* ZONE 1: LEFT BRANDING (Logo + Admin Portal Button) */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* LEFT: NE-RESQ LOGO, NAME & ADMIN PORTAL BUTTON */}
+          <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
             {/* Logo & Brand */}
             <Link href="/" className="flex items-center gap-2 group shrink-0">
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl liquid-glass-emergency-btn flex items-center justify-center text-white shadow-emergency-glow group-hover:scale-105 transition-transform shrink-0">
@@ -90,13 +120,13 @@ export function Navbar() {
                     8-STATE
                   </span>
                 </div>
-                <p className="text-[9px] text-charcoal-muted -mt-0.5 font-medium hidden 2xl:block">
+                <p className="text-[9px] text-charcoal-muted -mt-0.5 font-medium hidden sm:block">
                   Northeast Emergency Platform
                 </p>
               </div>
             </Link>
 
-            {/* Admin Portal Button — Immediately Beside Logo */}
+            {/* Admin Portal Button — Positioned beside Logo in Lower Row */}
             <Link
               href="/admin/login"
               className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-950/95 text-cyan-400 border border-cyan-500/40 shadow-cyan-glow hover:bg-slate-900 hover:border-cyan-400 hover:scale-105 active:scale-95 transition-all text-xs font-bold tracking-wide shrink-0 group backdrop-blur-md"
@@ -107,38 +137,18 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* ZONE 2: CENTER NAVIGATION (Strictly non-overlapping, balanced pills) */}
-          <nav className="hidden xl:flex flex-1 items-center justify-center gap-1 2xl:gap-1.5 px-2 min-w-0">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`px-2 2xl:px-2.5 py-1 2xl:py-1.5 rounded-full text-[11px] 2xl:text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
-                    isActive
-                      ? 'bg-cyan-50 text-cyan font-bold border border-cyan-200 shadow-xs'
-                      : 'text-charcoal-muted hover:text-charcoal hover:bg-white/80'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* ZONE 3: RIGHT CONTROLS (State, Language, Auth Pill, SOS, Mobile Menu Toggle) */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* RIGHT: LOCATION SELECTOR, LANGUAGE SELECTOR, SIGN IN & SOS CONTROLS */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             
-            {/* 8-State Dropdown */}
-            <div className="relative hidden lg:block shrink-0">
+            {/* 8-State Dropdown (Assam location selector) */}
+            <div className="relative shrink-0">
               <select
                 value={selectedStateCode}
                 onChange={(e) => {
                   setSelectedStateCode(e.target.value);
                   setSelectedDistrict('All Districts');
                 }}
-                className="appearance-none pl-6 pr-6 py-1 rounded-full text-[11px] font-semibold bg-white/95 border border-sky-200/90 text-charcoal shadow-xs cursor-pointer hover:border-cyan focus:outline-none"
+                className="appearance-none pl-6 pr-6 py-1.5 rounded-full text-xs font-semibold bg-white/95 border border-sky-200/90 text-charcoal shadow-xs cursor-pointer hover:border-cyan focus:outline-none"
               >
                 {NORTHEAST_STATES.map((st) => (
                   <option key={st.code} value={st.code} className="bg-white text-charcoal">
@@ -150,12 +160,12 @@ export function Navbar() {
               <ChevronDown className="w-2.5 h-2.5 text-charcoal-muted absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
 
-            {/* Language Selector */}
+            {/* Language Selector (English / Multilingual) */}
             <div className="relative shrink-0">
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as SupportedLanguage)}
-                className="appearance-none pl-6 pr-6 py-1 rounded-full text-[11px] font-bold bg-white/95 border border-emerald-500/40 text-charcoal shadow-xs cursor-pointer hover:border-emerald-600 focus:outline-none ring-1 ring-emerald-500/20"
+                className="appearance-none pl-6 pr-6 py-1.5 rounded-full text-xs font-bold bg-white/95 border border-emerald-500/40 text-charcoal shadow-xs cursor-pointer hover:border-emerald-600 focus:outline-none ring-1 ring-emerald-500/20"
                 aria-label="Select Language"
               >
                 {languages.map((l) => (
@@ -168,11 +178,11 @@ export function Navbar() {
               <ChevronDown className="w-2.5 h-2.5 text-charcoal-muted absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
 
-            {/* User Session Pill */}
+            {/* User Session Pill (Sign In / Profile) */}
             {userSession && isAuthorizedAdmin(userSession.role) ? (
               <Link
                 href="/admin"
-                className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-900 text-cyan-400 border border-cyan-500/50 shadow-cyan-glow hover:bg-slate-950 transition-colors shrink-0"
+                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold bg-slate-900 text-cyan-400 border border-cyan-500/50 shadow-cyan-glow hover:bg-slate-950 transition-colors shrink-0"
               >
                 <Lock className="w-3 h-3 text-cyan-400" />
                 <span>Admin</span>
@@ -180,7 +190,7 @@ export function Navbar() {
             ) : userSession ? (
               <Link
                 href="/profile"
-                className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-white/90 border border-sky-200 text-charcoal hover:text-cyan shadow-xs transition-colors shrink-0"
+                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold bg-white/90 border border-sky-200 text-charcoal hover:text-cyan shadow-xs transition-colors shrink-0"
               >
                 <User className="w-3 h-3 text-cyan" />
                 <span>Profile</span>
@@ -188,7 +198,7 @@ export function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-white/90 border border-sky-200 text-charcoal hover:text-cyan shadow-xs transition-colors shrink-0"
+                className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold bg-white/90 border border-sky-200 text-charcoal hover:text-cyan shadow-xs transition-colors shrink-0"
               >
                 <User className="w-3 h-3 text-charcoal-muted" />
                 <span>Sign In</span>
@@ -198,16 +208,16 @@ export function Navbar() {
             {/* Emergency SOS Button */}
             <Link
               href="/sos"
-              className="liquid-glass-emergency-btn text-white px-3 py-1 rounded-full font-black text-[11px] tracking-wider inline-flex items-center gap-1 shadow-emergency-glow hover:scale-105 active:scale-95 transition-transform shrink-0"
+              className="liquid-glass-emergency-btn text-white px-3.5 py-1.5 rounded-full font-black text-xs tracking-wider inline-flex items-center gap-1.5 shadow-emergency-glow hover:scale-105 active:scale-95 transition-transform shrink-0"
             >
-              <Radio className="w-3 h-3 animate-pulse" />
+              <Radio className="w-3.5 h-3.5 animate-pulse" />
               <span>{t('nav.sos', 'SOS')}</span>
             </Link>
 
             {/* Mobile / Tablet Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-1.5 rounded-xl text-charcoal hover:bg-white/80 transition-colors shrink-0"
+              className="lg:hidden p-1.5 rounded-xl text-charcoal hover:bg-white/80 transition-colors shrink-0"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5 text-charcoal" /> : <Menu className="w-5 h-5 text-charcoal" />}
@@ -218,9 +228,11 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile & Tablet Collapsible Menu Drawer */}
+      {/* ==================================================================== */}
+      {/* MOBILE & TABLET COLLAPSIBLE MENU DRAWER                              */}
+      {/* ==================================================================== */}
       {mobileMenuOpen && (
-        <div className="xl:hidden border-t border-sky-200 bg-background/95 backdrop-blur-2xl p-4 space-y-3 shadow-lg">
+        <div className="lg:hidden border-t border-sky-200 bg-background/95 backdrop-blur-2xl p-4 space-y-3 shadow-lg">
           {/* Quick Admin Portal Callout on Mobile */}
           <div className="p-3 rounded-2xl bg-slate-950 border border-cyan-500/40 flex items-center justify-between">
             <div className="flex items-center gap-2 text-white">
@@ -233,26 +245,6 @@ export function Navbar() {
             >
               Super Admin Login →
             </Link>
-          </div>
-
-          {/* State Selector on Mobile (when hidden on small screens) */}
-          <div className="lg:hidden flex items-center gap-2 bg-white/90 p-2 rounded-xl border border-sky-200 text-xs">
-            <MapPin className="w-3.5 h-3.5 text-emergency shrink-0" />
-            <span className="font-bold text-charcoal text-[11px]">Jurisdiction:</span>
-            <select
-              value={selectedStateCode}
-              onChange={(e) => {
-                setSelectedStateCode(e.target.value);
-                setSelectedDistrict('All Districts');
-              }}
-              className="flex-1 bg-transparent font-semibold text-charcoal outline-none text-xs"
-            >
-              {NORTHEAST_STATES.map((st) => (
-                <option key={st.code} value={st.code}>
-                  {st.name}
-                </option>
-              ))}
-            </select>
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-xs">
