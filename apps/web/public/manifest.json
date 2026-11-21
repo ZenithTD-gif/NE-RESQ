@@ -1,0 +1,21 @@
+{
+  "name": "NE-RESQ — Northeast Emergency Response & Safety Platform",
+  "short_name": "NE-RESQ",
+  "description": "One Region. One Network. One Mission — Saving Lives. Advanced disaster intelligence & rescue platform for Northeast India.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F9FC",
+  "theme_color": "#E94B55",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
