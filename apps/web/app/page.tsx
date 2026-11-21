@@ -16,7 +16,8 @@ import {
   LifeBuoy,
   FileText,
   PhoneCall,
-  CheckCircle2
+  CheckCircle2,
+  Bell
 } from 'lucide-react';
 import { LiquidCard } from '@/components/ui/LiquidCard';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -281,19 +282,19 @@ export default function HomePage() {
           </LiquidCard>
         </Link>
 
-        <Link href="/assistant" className="group">
-          <LiquidCard className="p-6 h-full flex flex-col justify-between hover:border-amber-500/40">
+        <Link href="/alerts" className="group">
+          <LiquidCard className="p-6 h-full flex flex-col justify-between hover:border-rose-500/40">
             <div>
-              <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-                <LifeBuoy className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                <Bell className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-charcoal text-base mb-1">{t('sec.assistantCardTitle', 'AI Emergency Assistant')}</h3>
+              <h3 className="font-bold text-charcoal text-base mb-1">{t('sec.alertsCardTitle', 'Official Disaster Alerts')}</h3>
               <p className="text-xs text-charcoal-muted">
-                {t('sec.assistantCardDesc', 'Verified NDMA & SDMA disaster safety protocols with multi-language voice and zero hallucination.')}
+                {t('sec.alertsCardDesc', 'Real-time verified meteorological warnings, flash flood advisories, and landslide risk bulletins.')}
               </p>
             </div>
-            <span className="text-xs font-bold text-amber-700 mt-4 inline-flex items-center gap-1">
-              {t('action.askAssistant', 'Ask Assistant →')}
+            <span className="text-xs font-bold text-rose-700 mt-4 inline-flex items-center gap-1">
+              {t('action.viewAlerts', 'View Alerts →')}
             </span>
           </LiquidCard>
         </Link>

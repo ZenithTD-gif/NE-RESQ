@@ -66,7 +66,6 @@ export function Navbar() {
     { href: '/shelters', label: t('nav.shelters', 'Shelters'), icon: LifeBuoy, desc: 'Relief Camps' },
     { href: '/evacuation', label: t('nav.evacuation', 'Evacuation'), icon: Compass, desc: 'GPS Safe Routes' },
     { href: '/reports', label: t('nav.reports', 'Reports'), icon: FileText, desc: 'Community Hazard' },
-    { href: '/assistant', label: t('nav.aiSafety', 'AI Safety'), icon: Sparkles, desc: 'AI Triage & Guidance' },
     { href: '/preparedness', label: t('nav.preparedness', 'Preparedness'), icon: ShieldCheck, desc: 'Disaster Checklists' },
     { href: '/about', label: t('nav.about', 'About'), icon: Info, desc: 'Platform Directorate' }
   ];
