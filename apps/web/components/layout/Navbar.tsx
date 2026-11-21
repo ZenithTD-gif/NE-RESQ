@@ -75,8 +75,9 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20 gap-3 sm:gap-4 w-full">
           
-          {/* LEFT: Logo & Brand + Admin Portal Button immediately beside it */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* LEFT & CENTER GROUP: Logo + Admin Portal Button + Left-Shifted Navigation Menu */}
+          <div className="flex items-center gap-2.5 sm:gap-3.5 lg:gap-4 min-w-0">
+            {/* Logo & Brand */}
             <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group shrink-0">
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl liquid-glass-emergency-btn flex items-center justify-center text-white shadow-emergency-glow group-hover:scale-105 transition-transform">
                 <ShieldAlert className="w-5 h-5 text-white" />
@@ -105,27 +106,27 @@ export function Navbar() {
               <ShieldCheck className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-12 transition-transform" />
               <span className="font-extrabold">Admin Portal</span>
             </Link>
-          </div>
 
-          {/* CENTER: Perfectly Center-Aligned Navigation Links */}
-          <nav className="hidden xl:flex flex-1 items-center justify-center gap-1 2xl:gap-1.5 text-xs font-semibold text-charcoal px-2">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`px-2.5 2xl:px-3 py-1.5 rounded-full transition-all whitespace-nowrap ${
-                    isActive
-                      ? 'bg-cyan-50 text-cyan font-bold border border-cyan-200 shadow-xs'
-                      : 'text-charcoal-muted hover:text-charcoal hover:bg-white/80'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
+            {/* Navigation Menu: Shifted toward left, starts right after Admin Portal and flows naturally */}
+            <nav className="hidden xl:flex items-center gap-1 2xl:gap-1.5 text-xs font-semibold text-charcoal pl-1 2xl:pl-2">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`px-2.5 2xl:px-3 py-1.5 rounded-full transition-all whitespace-nowrap ${
+                      isActive
+                        ? 'bg-cyan-50 text-cyan font-bold border border-cyan-200 shadow-xs'
+                        : 'text-charcoal-muted hover:text-charcoal hover:bg-white/80'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
 
           {/* RIGHT: Controls (State Selector, Language Selector, Sign In/Profile, SOS, Mobile Menu Toggle) */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">

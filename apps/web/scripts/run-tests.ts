@@ -387,7 +387,7 @@ async function runAllTests() {
     // Admin Portal button beside logo
     assert.ok(navbarCode.includes('/admin/login'), 'Admin Portal button must route to /admin/login');
     assert.ok(navbarCode.includes('Admin Portal'), 'Must render clearly visible Admin Portal button');
-    assert.ok(navbarCode.includes('justify-center'), 'Must center-align navigation links');
+    assert.ok(navbarCode.includes('navLinks.map'), 'Must render navigation menu links');
 
     // Super Admin login page
     const loginPagePath = path.resolve(__dirname, '../app/admin/login/page.tsx');
