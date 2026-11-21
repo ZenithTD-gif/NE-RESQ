@@ -17,26 +17,8 @@ export interface AppUser extends Omit<AdminUser, 'role'> {
   role: AppUserRole;
 }
 
-// In-memory user store initialized with default accounts
-const citizenUsers: Map<string, AppUser> = new Map([
-  [
-    'citizen@neresq.gov.in',
-    {
-      id: 'usr_cit_001',
-      email: 'citizen@neresq.gov.in',
-      password_hash: 'citizen2026',
-      full_name: 'Anup Kalita',
-      phone: '+91 9435012345',
-      role: 'CITIZEN',
-      department: 'General Citizen',
-      designation: 'Resident',
-      state: 'Assam',
-      district: 'Kamrup Metropolitan',
-      status: 'APPROVED',
-      created_at: '2026-01-15T00:00:00.000Z',
-    },
-  ],
-]);
+// Citizen user storage (zero mock accounts - all authenticated via Supabase database)
+const citizenUsers: Map<string, AppUser> = new Map();
 
 export function isAuthorizedAdmin(role?: string | null): boolean {
   if (!role) return false;

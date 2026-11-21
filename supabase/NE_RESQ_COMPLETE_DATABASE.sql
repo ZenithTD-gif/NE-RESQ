@@ -131,6 +131,32 @@ CREATE TABLE IF NOT EXISTS admin_registration_requests (
 );
 
 -- ==============================================================================
+-- SECTION 4B: CITIZEN USER PROFILES & RESIDENT SAFETY ACCOUNTS
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS user_profiles (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    auth_user_id UUID UNIQUE,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    full_name VARCHAR(150) NOT NULL,
+    phone VARCHAR(50),
+    state_id UUID REFERENCES states(id) ON DELETE SET NULL,
+    district_id UUID REFERENCES districts(id) ON DELETE SET NULL,
+    state_name VARCHAR(100) DEFAULT 'Assam',
+    district_name VARCHAR(100) DEFAULT 'Kamrup Metropolitan',
+    role VARCHAR(50) DEFAULT 'CITIZEN',
+    is_verified BOOLEAN DEFAULT TRUE,
+    status VARCHAR(50) DEFAULT 'APPROVED',
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_profiles_email ON user_profiles(email);
+CREATE TRIGGER update_user_profiles_modtime 
+    BEFORE UPDATE ON user_profiles 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ==============================================================================
 -- SECTION 5: EMERGENCY CONTACT MANAGEMENT (CENTRALIZED DIRECTORY)
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS emergency_contacts (
@@ -429,6 +455,7 @@ ALTER TABLE shelters ENABLE ROW LEVEL SECURITY;
 ALTER TABLE rescue_facilities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE website_content ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_audit_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
 
 -- 1. Public Read Policies (Only verified and published records visible to public)
 CREATE POLICY "Public Read Active States" 
@@ -489,6 +516,15 @@ CREATE POLICY "Admin Full Access on Content"
 CREATE POLICY "Admin Access on Audit Logs" 
     ON admin_audit_logs FOR SELECT 
     USING (auth.role() = 'authenticated' OR auth.role() = 'service_role');
+
+-- 3. User Profiles Access Policies
+CREATE POLICY "Users Read Permitted Profiles"
+    ON user_profiles FOR SELECT
+    USING (true);
+
+CREATE POLICY "Service Role Full Access on Profiles"
+    ON user_profiles FOR ALL
+    USING (auth.role() = 'service_role');
 
 CREATE POLICY "Admin Users Self or SuperAdmin" 
     ON admin_users FOR ALL 

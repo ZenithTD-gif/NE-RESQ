@@ -402,6 +402,38 @@ async function runAllTests() {
     assert.ok(fs.existsSync(dashPath), 'app/admin/dashboard/page.tsx must exist');
   });
 
+  // 16. Citizen & Super Admin Authentication, Database & Security Verification
+  test('Authentication Security & Supabase Database Verification', () => {
+    // Check API route
+    const authRoutePath = path.resolve(__dirname, '../app/api/auth/route.ts');
+    assert.ok(fs.existsSync(authRoutePath), 'app/api/auth/route.ts must exist');
+    const authRouteCode = fs.readFileSync(authRoutePath, 'utf8');
+
+    assert.ok(authRouteCode.includes('user_profiles'), 'Auth route must query user_profiles in Supabase');
+    assert.ok(authRouteCode.includes('hashPassword'), 'Auth route must hash passwords');
+    assert.ok(authRouteCode.includes('super_admin_only'), 'Auth route must handle super_admin_only flag');
+    assert.ok(!authRouteCode.includes("usr_cit_001"), 'No hardcoded demo citizen IDs in auth route');
+
+    // Check Profile Protection
+    const profilePath = path.resolve(__dirname, '../app/profile/page.tsx');
+    const profileCode = fs.readFileSync(profilePath, 'utf8');
+    assert.ok(!profileCode.includes('Anup Kalita'), 'Profile page must not have hardcoded Anup Kalita fallback');
+    assert.ok(profileCode.includes('auth_required'), 'Profile page must redirect to login with auth_required');
+    assert.ok(profileCode.includes('verify'), 'Profile page must verify session against database');
+
+    // Check Database SQL Schema has user_profiles
+    const sqlPath = path.resolve(__dirname, '../../../supabase/NE_RESQ_COMPLETE_DATABASE.sql');
+    const sqlCode = fs.readFileSync(sqlPath, 'utf8');
+    assert.ok(sqlCode.includes('CREATE TABLE IF NOT EXISTS user_profiles'), 'SQL schema must define user_profiles table');
+    assert.ok(sqlCode.includes('ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;'), 'RLS must be enabled on user_profiles');
+
+    // Check Environment Variables Configuration
+    const envPath = path.resolve(__dirname, '../.env.local');
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    assert.ok(envContent.includes('ADMIN_EMAIL='), 'ADMIN_EMAIL must be defined in .env.local');
+    assert.ok(envContent.includes('ADMIN_PASSWORD='), 'ADMIN_PASSWORD must be defined in .env.local');
+  });
+
   console.log('\n====================================================');
   console.log(`TEST SUMMARY: ${passedTests} PASSED, ${failedTests} FAILED`);
   console.log('====================================================\n');

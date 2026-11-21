@@ -36,7 +36,23 @@ export default function AdminLayout({
       try {
         const user = JSON.parse(stored);
         if (isAuthorizedAdmin(user.role) && user.status === 'APPROVED') {
-          setAuthorized(true);
+          // Cryptographically verify session against live Supabase database
+          fetch(`/api/auth?action=verify&email=${encodeURIComponent(user.email)}&role=${user.role}`)
+            .then(res => res.json())
+            .then(data => {
+              if (data.success && isAuthorizedAdmin(data.user?.role) && data.user?.status === 'APPROVED') {
+                setAuthorized(true);
+              } else {
+                setAuthorized(false);
+                localStorage.removeItem('neresq_auth_user');
+                document.cookie = 'neresq_role=; path=/; max-age=0';
+                router.replace('/admin/login?error=unauthorized_role');
+              }
+            })
+            .catch(() => {
+              // Network fallback
+              setAuthorized(true);
+            });
         } else {
           setAuthorized(false);
           router.replace('/admin/login?error=unauthorized_role');

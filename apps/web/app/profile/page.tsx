@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { User, Phone, Mail, MapPin, ShieldCheck, LogOut, Radio, ArrowRight, ShieldAlert, Clock, Layers } from 'lucide-react';
+import { User, Phone, Mail, MapPin, ShieldCheck, LogOut, Radio, ArrowRight, ShieldAlert, Clock, Layers, Loader2 } from 'lucide-react';
 import { isAuthorizedAdmin } from '@/lib/admin-auth';
 
 export default function ProfilePage() {
@@ -12,41 +12,79 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    let isMounted = true;
+
+    async function verifyAndLoadSession() {
+      if (typeof window === 'undefined') return;
+
       const stored = localStorage.getItem('neresq_auth_user');
-      if (stored) {
-        try {
-          setUser(JSON.parse(stored));
-        } catch {
-          // ignore
-        }
-      } else {
-        // Fallback citizen for demo
-        setUser({
-          id: 'usr_cit_001',
-          full_name: 'Anup Kalita',
-          email: 'citizen@neresq.gov.in',
-          phone: '+91 9435012345',
-          role: 'CITIZEN',
-          state: 'Assam',
-          district: 'Kamrup Metropolitan',
-          department: 'Resident Citizen'
-        });
+      if (!stored) {
+        router.replace('/login?error=auth_required');
+        return;
       }
-      setLoading(false);
+
+      try {
+        const parsed = JSON.parse(stored);
+        if (!parsed || !parsed.email) {
+          localStorage.removeItem('neresq_auth_user');
+          document.cookie = 'neresq_role=; path=/; max-age=0';
+          router.replace('/login?error=auth_required');
+          return;
+        }
+
+        // Verify session live against Supabase database
+        const res = await fetch(`/api/auth?action=verify&email=${encodeURIComponent(parsed.email)}&role=${parsed.role || 'CITIZEN'}`);
+        const data = await res.json();
+
+        if (!data.success || !data.user) {
+          localStorage.removeItem('neresq_auth_user');
+          document.cookie = 'neresq_role=; path=/; max-age=0';
+          router.replace('/login?error=invalid_session');
+          return;
+        }
+
+        if (isMounted) {
+          // Update with live database profile
+          setUser(data.user);
+          localStorage.setItem('neresq_auth_user', JSON.stringify(data.user));
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error('Session verification error:', err);
+        localStorage.removeItem('neresq_auth_user');
+        router.replace('/login?error=invalid_session');
+      }
     }
-  }, []);
+
+    verifyAndLoadSession();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [router]);
 
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('neresq_auth_user');
       sessionStorage.removeItem('neresq_auth_user');
-      document.cookie = 'neresq_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      document.cookie = 'neresq_role=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     }
     router.push('/login?notice=logged_out');
   };
 
   const isAdmin = user && isAuthorizedAdmin(user.role);
+
+  if (loading) {
+    return (
+      <div className="min-h-[calc(100vh-140px)] flex items-center justify-center p-4">
+        <div className="liquid-glass-card p-8 max-w-sm w-full text-center space-y-4">
+          <Loader2 className="w-8 h-8 text-cyan animate-spin mx-auto" />
+          <h2 className="text-sm font-bold text-charcoal">Verifying Account Security</h2>
+          <p className="text-xs text-charcoal-muted">Checking Supabase authentication credentials...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
@@ -55,7 +93,7 @@ export default function ProfilePage() {
       <div className="liquid-glass-card p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan to-blue-600 flex items-center justify-center text-white font-black text-2xl shadow-md">
-            {user?.full_name ? user.full_name[0] : 'U'}
+            {user?.full_name ? user.full_name[0].toUpperCase() : 'U'}
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -99,7 +137,7 @@ export default function ProfilePage() {
             </div>
           </div>
           <Link
-            href="/admin"
+            href="/admin/dashboard"
             className="neon-cyan-btn px-5 py-2.5 rounded-xl text-xs font-black flex items-center gap-2 shrink-0 self-start sm:self-auto"
           >
             <span>ENTER ADMIN PORTAL</span>

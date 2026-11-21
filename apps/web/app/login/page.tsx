@@ -66,11 +66,6 @@ function LoginForm() {
     }
   };
 
-  const handleQuickFillAdmin = () => {
-    setEmail('superadmin@neresq.gov.in');
-    setPassword('@Tridipmac07');
-  };
-
   return (
     <div className="min-h-[calc(100vh-140px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-6">
@@ -158,18 +153,18 @@ function LoginForm() {
             </button>
           </form>
 
-          {/* Super Admin Quick Autofill */}
+          {/* Super Admin Directorate Gateway Link */}
           <div className="pt-4 border-t border-sky-100 space-y-2">
             <span className="text-[10px] font-bold text-charcoal-muted uppercase tracking-wider block text-center">
-              Super Admin Official Account
+              Official Administration
             </span>
-            <button
-              type="button"
-              onClick={handleQuickFillAdmin}
-              className="w-full p-2.5 rounded-xl border border-cyan-200 bg-cyan-50/80 hover:bg-cyan-100 text-[11px] font-bold text-cyan-800 transition-colors text-center"
+            <Link
+              href="/admin/login"
+              className="w-full p-2.5 rounded-xl border border-cyan-300 bg-cyan-50/80 hover:bg-cyan-100 text-[11px] font-bold text-cyan-900 transition-colors flex items-center justify-center gap-1.5"
             >
-              Autofill Root Super Administrator Credentials
-            </button>
+              <ShieldAlert className="w-3.5 h-3.5 text-cyan-600" />
+              <span>Super Administrator Directorate Login &rarr;</span>
+            </Link>
           </div>
 
           <div className="text-center text-xs text-charcoal-muted">
