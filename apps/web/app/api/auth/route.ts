@@ -116,7 +116,7 @@ export async function POST(request: Request) {
       }
 
       const inputHash = hashPassword(password);
-      const envAdminEmail = (process.env.ADMIN_EMAIL || 'superadmin@neresq.gov.in').toLowerCase().trim();
+      const envAdminEmail = (process.env.ADMIN_EMAIL || 'tdeka379@gmail.com').toLowerCase().trim();
       const envAdminPassword = process.env.ADMIN_PASSWORD || '@Tridipmac07';
 
       // 1. Super Admin Portal Login Flow

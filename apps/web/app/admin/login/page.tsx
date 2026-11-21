@@ -163,13 +163,13 @@ function SuperAdminLoginForm() {
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-slate-300 flex items-center justify-between">
                   <span>Official Directorate Email</span>
-                  <span className="text-[10px] text-cyan-400 font-mono">GOV.IN REQUIRED</span>
+                  <span className="text-[10px] text-cyan-400 font-mono">AUTHORIZED CLEARANCE</span>
                 </label>
                 <div className="relative">
                   <input
                     type="email"
                     required
-                    placeholder="superadmin@neresq.gov.in"
+                    placeholder="tdeka379@gmail.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full text-xs font-semibold p-3 pl-10 rounded-xl border border-slate-700 bg-slate-900/90 text-white placeholder:text-slate-500 outline-none focus:border-cyan-400 transition-colors"
